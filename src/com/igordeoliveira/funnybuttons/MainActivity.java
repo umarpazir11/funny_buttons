@@ -2,6 +2,10 @@ package com.igordeoliveira.funnybuttons;
 
 import java.io.IOException;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,13 +17,21 @@ import android.widget.ImageButton;
 
 public class MainActivity extends Activity {
 
-	private boolean btnAiQueDeliciaIsRunning = false;
 	private MediaPlayer mpAiQueDelicia;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		
+		// Look up the AdView as a resource and load a request.
+	    AdView adView = (AdView)this.findViewById(R.id.adView);
+	    //adView.setAdUnitId("ca-app-pub-9328167116045984/6129942756");
+	    //adView.setAdSize(AdSize.BANNER);
+	    AdRequest adRequest = new AdRequest.Builder().build();
+	    
+	    adView.loadAd(adRequest);		
 		
 		mpAiQueDelicia = MediaPlayer.create(getApplicationContext(), R.raw.quedelicia);
 		
@@ -30,24 +42,12 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				if (!btnAiQueDeliciaIsRunning) {
-					try {
-						mpAiQueDelicia.prepare();
-						mpAiQueDelicia.seekTo(0);
-					} catch (IllegalStateException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				if (!mpAiQueDelicia.isPlaying()) {
 					mpAiQueDelicia.start();
-					btnAiQueDeliciaIsRunning = true;
 					Log.v("FUNNYBUTTONS", "Ai que delicia porra!");
 				}
 				else {
 					mpAiQueDelicia.pause();
-					btnAiQueDeliciaIsRunning = false;
 				}
 				
 			}
